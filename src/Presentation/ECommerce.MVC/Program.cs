@@ -1,4 +1,8 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using ECommerce.Application.IoC;
 using ECommerce.Infrastructure.Context;
+using ECommerce.MVC.Models.SeedDataModel;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +14,11 @@ builder.Services.AddDbContext<ECommerceAppDbContext>(_ =>
     _.UseSqlServer(builder.Configuration.GetConnectionString("ECommerceConnString"));
 });
 
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
+{
+    builder.RegisterModule(new DependencyResolver());
+});
 
 var app = builder.Build();
 
@@ -20,7 +29,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
+SeedData.Seed(app);
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

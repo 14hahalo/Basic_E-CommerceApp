@@ -1,4 +1,6 @@
 ﻿using ECommerce.Domain.Enums;
+using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ECommerce.Domain.Entities
 {
@@ -7,12 +9,17 @@ namespace ECommerce.Domain.Entities
         public Guid Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string EMail { get; set; }
+        public string Password { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? DeleteDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public DateTime BirthDate { get; set; }
         public Status Status { get; set; }
-        Roles Roles { get; set; }
+        public Roles Role { get; set; }
+        [NotMapped]
+        public IFormFile UploadPath { get; set; }
+        public string? ImagePath { get; set; }
         //Navigation Property
         public Guid? MallId { get; set; }
         public Mall? Mall { get; set; }

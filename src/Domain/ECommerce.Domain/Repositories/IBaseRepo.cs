@@ -22,5 +22,19 @@ namespace ECommerce.Domain.Repositories
             Expression<Func<T, bool>> where,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
             Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null);
+        /*Actually, these Tasks are working like SQL query.
+         * Firstly, we need to define our selection with 'select'
+         * Then, we can spesify our conditions with 'where' keyword.
+         * OrderBy and include functions can be used if necessary.
+         * 
+         * Example:
+         * select : new Mall
+         * {
+         * x.Id=Id,
+         * x.Name=Name,
+         * }, 
+         * where : x.Where(x=>x.Status==Status.Active),
+         * orderBy : x.OrderBy(x=>x.Name)*/
+
     }
 }

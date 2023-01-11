@@ -13,7 +13,8 @@ namespace ECommerce.Infrastructure.EntityTypeConfiguration
 
             builder.HasOne(x => x.Mall)
                 .WithMany(x => x.Employees)
-                .HasForeignKey(x => x.MallId);
+                .HasForeignKey(x => x.MallId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(x => x.Employees)
                 .WithOne(x => x.Manager)
