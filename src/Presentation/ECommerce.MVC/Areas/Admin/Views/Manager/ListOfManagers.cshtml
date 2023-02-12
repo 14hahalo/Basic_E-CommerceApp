@@ -5,43 +5,53 @@
 }
 
 <h1>ListOfManagers</h1>
+<h3>@ViewBag.EmptyList</h3>
+
 
 <p>
-    <a asp-action="AddManager">Create New</a>
+    <a asp-action="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                FirstName
+                IMAGE
             </th>
             <th>
-                LastName
+                NAME
             </th>
             <th>
-                Role
+                SURNAME
             </th>
-            @*<th></th>*@
+            <th>
+                ROLES
+            </th>
+            <th>
+                FUNCTIONS
+            </th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @item.FirstName
-            </td>
-            <td>
-                @item.LastName
-            </td>
-            <td>
-                @item.Role.ToString();
-            </td>
-@*            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>*@
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <img src="@item.ImagePath" height="100" width="100">
+                </td>
+                <td>
+                    @item.FirstName
+                </td>
+                <td>
+                    @item.LastName
+                </td>
+                <td>
+                    @item.Role.ToString();
+                </td>
+                <td>
+                    <a class="btn btn-success" asp-action="UpdateManager" asp-area="Admin" asp-controller="Manager" asp-route-id="@item.Id">Edit</a> |
+                    <a class="btn btn-danger" asp-action="DeleteManager" asp-area="Admin" asp-controller="Manager" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

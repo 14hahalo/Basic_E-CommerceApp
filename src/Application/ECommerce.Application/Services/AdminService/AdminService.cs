@@ -44,11 +44,52 @@ namespace ECommerce.Application.Services.AdminService
                     Id = x.Id,
                     FirstName = x.FirstName,
                     LastName = x.LastName,
-                    Role = x.Role
+                    Role = x.Role,
+                    ImagePath = x.ImagePath,
                 },
-                where: x => (x.Status == Status.Active && x.Role == Roles.Manager),
+                where: x => ((x.Status == Status.Active || x.Status == Status.Modified) && x.Role == Roles.Manager),
                 orderBy: x => x.OrderBy(x => x.FirstName));
             return managers;
+        }
+
+        public async Task UpdateManager(UpdateManagerDTO updateManagerDTO)
+        {
+            var model = await _employeeRepo.GetDefault(x => x.Id == updateManagerDTO.Id);
+
+            model.FirstName = updateManagerDTO.FirstName;
+            model.LastName = updateManagerDTO.LastName;
+            model.UpdateDate = updateManagerDTO.UpdateDate;
+            model.Status = updateManagerDTO.Status;
+
+            using var image = Image.Load(updateManagerDTO.UploadPath.OpenReadStream());
+            image.Mutate(x => x.Resize(600, 560));
+            Guid guid = Guid.NewGuid();
+            image.Save($"wwwroot/images/{guid}.jpg");
+            model.ImagePath = ($"/images/{guid}.jpg");
+            await _employeeRepo.Update(model);
+        }
+
+        public async Task DeleteManager(Guid id)
+        {
+            var model = await _employeeRepo.GetDefault(x => x.Id == id);
+            model.DeleteDate = DateTime.Now;
+            model.Status = Status.Passive;
+            await _employeeRepo.Delete(model);
+        }
+
+        public async Task<UpdateManagerDTO> GetManager(Guid id)
+        {
+            var manager = await _employeeRepo.GetFilteredFirstOrDefault(
+                 select: x => new UpdateManagerVM
+                 {
+                     Id = x.Id,
+                     FirstName = x.FirstName,
+                     LastName = x.LastName,
+                     ImagePath = x.ImagePath,
+                 },
+                 where: x => x.Id == id);
+            var updateManagerDTO = _mapper.Map<UpdateManagerDTO>(manager);
+            return updateManagerDTO;
         }
     }
 }

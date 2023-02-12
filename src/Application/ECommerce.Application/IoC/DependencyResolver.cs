@@ -2,6 +2,7 @@
 using AutoMapper;
 using ECommerce.Application.AutoMapper;
 using ECommerce.Application.Services.AdminService;
+using ECommerce.Application.Services.Login_Service;
 using ECommerce.Domain.Repositories;
 using ECommerce.Infrastructure.Repositories;
 
@@ -14,6 +15,8 @@ namespace ECommerce.Application.IoC
             //IoC --> Yani interface çağırdığım zaman bana onun Concrete yapısını getirmesi gerektiğini söylüyorduk.
             builder.RegisterType<EmployeeRepo>().As<IEmployeeRepo>().InstancePerLifetimeScope();
             builder.RegisterType<AdminService>().As<IAdminService>().InstancePerLifetimeScope();
+            builder.RegisterType<LoginService>().As<ILoginService>().InstancePerLifetimeScope();
+
             // ÖRNEK :
             // builder.RegisterType<BaseRepo>().As<IBaseRepo>().InstancePerLisfeTimeScope();
 

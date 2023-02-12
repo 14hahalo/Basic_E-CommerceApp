@@ -3,6 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using ECommerce.Application.IoC;
 using ECommerce.Infrastructure.Context;
 using ECommerce.MVC.Models.SeedDataModel;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +20,23 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 {
     builder.RegisterModule(new DependencyResolver());
 });
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(_ =>
+{
+    _.LoginPath = "/Login/Login";
+    _.Cookie = new CookieBuilder
+    {
+        Name = "ECommerceCookie",
+        SecurePolicy = CookieSecurePolicy.Always,
+        HttpOnly = true
+    };
+    _.ExpireTimeSpan = TimeSpan.FromMinutes(15);
+    _.SlidingExpiration = false;
+    _.Cookie.MaxAge = _.ExpireTimeSpan;
+});
+builder.Services.AddSession(_ =>
+{
+    _.IdleTimeout = TimeSpan.FromMinutes(15);
+});
 
 var app = builder.Build();
 
@@ -30,20 +48,18 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 SeedData.Seed(app);
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseSession();
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllerRoute(
   name: "areas",
   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
 );
-
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
+    pattern: "{controller=Login}/{action=Login}/{id?}");
 app.Run();

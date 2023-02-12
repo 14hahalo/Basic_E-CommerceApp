@@ -8,5 +8,6 @@ namespace ECommerce.Application.Models.VMs
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public Roles Role { get; set; }
+        public string ImagePath { get; set; }
     }
 }

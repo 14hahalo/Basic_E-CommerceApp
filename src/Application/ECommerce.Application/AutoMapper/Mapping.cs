@@ -14,6 +14,8 @@ namespace ECommerce.Application.AutoMapper
             //Örnek : CreateMap<T,TResult>().ReverseMap();
             CreateMap<Employee, AddManagerDTO>().ReverseMap();
             CreateMap<Employee, ListOfManagersVM>().ReverseMap();
+            CreateMap<UpdateManagerVM, UpdateManagerDTO>().ReverseMap();
+            CreateMap<UpdateManagerDTO, Employee>().ReverseMap();
         }
     }
 }
